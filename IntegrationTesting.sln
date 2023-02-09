@@ -1,10 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Unedited API", "Unedited API", "{73123EB9-3A4D-4C87-BC85-639D0FF2CABA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customers.Api", "src\Customers.Api\Customers.Api.csproj", "{F0533255-6FE6-4E8E-9847-75827A7603C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customers.Api", "Unedited API\Customers.Api\Customers.Api.csproj", "{F0533255-6FE6-4E8E-9847-75827A7603C1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B46E0BBF-7DAC-401C-9C3C-92E9DCBAA9B0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Fundamentals", "3. Fundamentals", "{69091825-21EA-496D-8EF1-BCB47C30B2C9}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{06CAAE99-53B5-4F1C-A674-5B7C6DBEEF4D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C597AF86-87F1-4BF1-960F-3924BFD15455}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,7 +18,7 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F0533255-6FE6-4E8E-9847-75827A7603C1} = {73123EB9-3A4D-4C87-BC85-639D0FF2CABA}
+		{F0533255-6FE6-4E8E-9847-75827A7603C1} = {B46E0BBF-7DAC-401C-9C3C-92E9DCBAA9B0}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F0533255-6FE6-4E8E-9847-75827A7603C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
