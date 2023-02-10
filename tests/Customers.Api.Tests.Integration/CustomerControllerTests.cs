@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Net;
 using System.Net.Http.Json;
+using Bogus;
 using Customers.Api.Contracts.Requests;
 using Customers.Api.Contracts.Responses;
 using FluentAssertions;
@@ -13,7 +14,13 @@ namespace Customers.Api.Tests.Integration;
 public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixture<WebApplicationFactory<IApiMarker>>
 {
     private readonly HttpClient _httpClient;
-    
+
+    private readonly Faker<CustomerRequest> _customerGenerator = new Faker<CustomerRequest>()
+        .RuleFor(x => x.FullName, faker => faker.Person.FullName)
+        .RuleFor(x => x.Email, faker => faker.Person.Email)
+        .RuleFor(x => x.GitHubUsername, "johndoe")
+        .RuleFor(x => x.DateOfBirth, faker => faker.Person.DateOfBirth.Date);
+
     public CustomerControllerTests(WebApplicationFactory<IApiMarker> appFactory)
     {
         //  Sync Setup
@@ -24,13 +31,7 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixtur
     public async Task Create_ReturnsCreated_WhenCustomerIsCreated()
     {
         // Arrange
-        var customer = new CustomerRequest
-        {
-            FullName = "John Doe",
-            Email = "john@doe.com",
-            GitHubUsername = "johndoe",
-            DateOfBirth = new DateTime(1989, 12, 11)
-        };
+        var customer = _customerGenerator.Generate();
         
         // Act
         var response = await _httpClient.PostAsJsonAsync("customers", customer);
