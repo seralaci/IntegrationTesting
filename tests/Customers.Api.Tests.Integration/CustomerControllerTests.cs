@@ -21,6 +21,8 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixtur
         .RuleFor(x => x.GitHubUsername, "johndoe")
         .RuleFor(x => x.DateOfBirth, faker => faker.Person.DateOfBirth.Date);
 
+    private readonly List<Guid> _createdIds = new();
+
     public CustomerControllerTests(WebApplicationFactory<IApiMarker> appFactory)
     {
         //  Sync Setup
@@ -41,6 +43,9 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixtur
         customerResponse.Should().BeEquivalentTo(customer);
             
         response.StatusCode.Should().Be(HttpStatusCode.Created);
+        
+        // CleanUp
+        _createdIds.Add(customerResponse!.Id);
     }
 
     [Theory]
@@ -90,10 +95,13 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixtur
         return Task.CompletedTask;
     }
 
-    public Task DisposeAsync()
+    public async Task DisposeAsync()
     {
         // Async cleanup
-        return Task.CompletedTask;
+        foreach (var createdId in _createdIds)
+        {
+            await _httpClient.DeleteAsync($"customers/{createdId}");
+        }
     }
 
     public void Dispose()
