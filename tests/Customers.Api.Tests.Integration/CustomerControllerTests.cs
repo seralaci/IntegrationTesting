@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections;
+using System.Net;
 using Xunit;
 
 namespace Customers.Api.Tests.Integration;
@@ -27,10 +28,22 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable
         // Assert
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
     }
-    
+
     [Theory]
     [MemberData(nameof(Data))]
     public async Task Get_ReturnsNotFound_WhenCustomerDoesNotExists_MemberDataParameters(string guidAsText)
+    {
+        // Arrange
+        // Act
+        var response = await _httpClient.GetAsync($"customers/{Guid.Parse(guidAsText)}");
+
+        // Assert
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+    }
+    
+    [Theory]
+    [ClassData(typeof(TestData))]
+    public async Task Get_ReturnsNotFound_WhenCustomerDoesNotExists_ClassDataParameters(string guidAsText)
     {
         // Arrange
         // Act
@@ -63,4 +76,18 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable
         new[] {"2EFD541F-3A80-414E-8FE5-524C93D58379"},
         new[] {"19C1DBD6-7B12-4A4A-8D56-51736E7670D2"}
     };
+}
+
+public class TestData : IEnumerable<object[]>
+{
+    public IEnumerator<object[]> GetEnumerator()
+    {
+        yield return new object[] {"2EFD541F-3A80-414E-8FE5-524C93D58379"};
+        yield return new object[] {"19C1DBD6-7B12-4A4A-8D56-51736E7670D2"};
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 }
