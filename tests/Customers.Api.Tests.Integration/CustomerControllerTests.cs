@@ -3,10 +3,10 @@ using Xunit;
 
 namespace Customers.Api.Tests.Integration;
 
-public class IntegrationTest
+public class CustomerControllerTests
 {
     [Fact]
-    public async Task Test()
+    public async Task Get_ReturnsNotFound_WhenCustomerDoesNotExists()
     {
         var httpClient = new HttpClient
         {
