@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Net;
 using System.Net.Http.Json;
+using Customers.Api.Contracts.Requests;
+using Customers.Api.Contracts.Responses;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -16,6 +18,28 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixtur
     {
         //  Sync Setup
         _httpClient = appFactory.CreateClient();
+    }
+
+    [Fact]
+    public async Task Create_ReturnsCreated_WhenCustomerIsCreated()
+    {
+        // Arrange
+        var customer = new CustomerRequest
+        {
+            FullName = "John Doe",
+            Email = "john@doe.com",
+            GitHubUsername = "johndoe",
+            DateOfBirth = new DateTime(1989, 12, 11)
+        };
+        
+        // Act
+        var response = await _httpClient.PostAsJsonAsync("customers", customer);
+
+        // Assert
+        var customerResponse = await response.Content.ReadFromJsonAsync<CustomerResponse>();
+        customerResponse.Should().BeEquivalentTo(customer);
+            
+        response.StatusCode.Should().Be(HttpStatusCode.Created);
     }
 
     [Theory]
