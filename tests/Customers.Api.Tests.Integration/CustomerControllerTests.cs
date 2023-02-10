@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Net;
+using FluentAssertions;
 using Xunit;
 
 namespace Customers.Api.Tests.Integration;
@@ -26,7 +27,7 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable
         var response = await _httpClient.GetAsync($"customers/{Guid.Parse(guidAsText)}");
 
         // Assert
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Theory(Skip = "An example of how all of cases can be skipped")]
@@ -38,7 +39,7 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable
         var response = await _httpClient.GetAsync($"customers/{Guid.Parse(guidAsText)}");
 
         // Assert
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
     
     [Theory]
@@ -50,7 +51,7 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable
         var response = await _httpClient.GetAsync($"customers/{Guid.Parse(guidAsText)}");
 
         // Assert
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     public Task InitializeAsync()
