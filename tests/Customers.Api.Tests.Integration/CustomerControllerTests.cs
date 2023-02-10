@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Net;
+using System.Net.Http.Json;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
@@ -27,6 +29,10 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixtur
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        
+        var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+        problem!.Title.Should().Contain("Not Found");
+        problem.Status.Should().Be(404);
     }
 
     [Theory(Skip = "An example of how all of cases can be skipped")]
