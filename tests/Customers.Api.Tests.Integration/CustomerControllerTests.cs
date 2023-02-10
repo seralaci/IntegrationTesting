@@ -1,20 +1,19 @@
 ﻿using System.Collections;
 using System.Net;
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace Customers.Api.Tests.Integration;
 
-public class CustomerControllerTests : IAsyncLifetime, IDisposable
+public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixture<WebApplicationFactory<IApiMarker>>
 {
-    private readonly HttpClient _httpClient = new()
-    {
-        BaseAddress = new Uri("https://localhost:5001")
-    };
-
-    public CustomerControllerTests()
+    private readonly HttpClient _httpClient;
+    
+    public CustomerControllerTests(WebApplicationFactory<IApiMarker> appFactory)
     {
         //  Sync Setup
+        _httpClient = appFactory.CreateClient();
     }
 
     [Theory]
