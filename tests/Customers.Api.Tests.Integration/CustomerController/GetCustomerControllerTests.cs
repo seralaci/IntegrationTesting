@@ -3,15 +3,14 @@ using System.Net;
 using System.Net.Http.Json;
 using Bogus;
 using Customers.Api.Contracts.Requests;
-using Customers.Api.Contracts.Responses;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
-namespace Customers.Api.Tests.Integration;
+namespace Customers.Api.Tests.Integration.CustomerController;
 
-public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixture<WebApplicationFactory<IApiMarker>>
+public class GetCustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixture<WebApplicationFactory<IApiMarker>>
 {
     private readonly HttpClient _httpClient;
 
@@ -23,31 +22,12 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixtur
 
     private readonly List<Guid> _createdIds = new();
 
-    public CustomerControllerTests(WebApplicationFactory<IApiMarker> appFactory)
+    public GetCustomerControllerTests(WebApplicationFactory<IApiMarker> appFactory)
     {
         //  Sync Setup
         _httpClient = appFactory.CreateClient();
     }
-
-    [Fact]
-    public async Task Create_ReturnsCreated_WhenCustomerIsCreated()
-    {
-        // Arrange
-        var customer = _customerGenerator.Generate();
-        
-        // Act
-        var response = await _httpClient.PostAsJsonAsync("customers", customer);
-
-        // Assert
-        var customerResponse = await response.Content.ReadFromJsonAsync<CustomerResponse>();
-        customerResponse.Should().BeEquivalentTo(customer);
-            
-        response.StatusCode.Should().Be(HttpStatusCode.Created);
-        
-        // CleanUp
-        _createdIds.Add(customerResponse!.Id);
-    }
-
+    
     [Theory]
     [InlineData("2EFD541F-3A80-414E-8FE5-524C93D58379", Skip = "An example of how a case can be skipped")]
     [InlineData("19C1DBD6-7B12-4A4A-8D56-51736E7670D2")]
@@ -88,20 +68,17 @@ public class CustomerControllerTests : IAsyncLifetime, IDisposable, IClassFixtur
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
-
+    
     public Task InitializeAsync()
     {
         // Async Setup
         return Task.CompletedTask;
     }
 
-    public async Task DisposeAsync()
+    public Task DisposeAsync()
     {
         // Async cleanup
-        foreach (var createdId in _createdIds)
-        {
-            await _httpClient.DeleteAsync($"customers/{createdId}");
-        }
+        return Task.CompletedTask;
     }
 
     public void Dispose()
