@@ -9,6 +9,7 @@ using Xunit;
 
 namespace Customers.Api.Tests.Integration.CustomerController;
 
+// [Collection("CustomerApi Collection")]
 public class CreateCustomerControllerTests : IAsyncLifetime, IClassFixture<WebApplicationFactory<IApiMarker>>
 {
     private readonly HttpClient _httpClient;
