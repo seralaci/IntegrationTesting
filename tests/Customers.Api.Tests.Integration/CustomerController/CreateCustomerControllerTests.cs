@@ -4,14 +4,13 @@ using Bogus;
 using Customers.Api.Contracts.Requests;
 using Customers.Api.Contracts.Responses;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 
 namespace Customers.Api.Tests.Integration.CustomerController;
 
-// [Collection("CustomerApi Collection")]
-public class CreateCustomerControllerTests : IAsyncLifetime, IClassFixture<WebApplicationFactory<IApiMarker>>
+public class CreateCustomerControllerTests : IAsyncLifetime, IClassFixture<CustomerApiFactory>
 {
+    private readonly CustomerApiFactory _apiFactory;
     private readonly HttpClient _httpClient;
 
     private readonly Faker<CustomerRequest> _customerGenerator = new Faker<CustomerRequest>()
@@ -22,10 +21,11 @@ public class CreateCustomerControllerTests : IAsyncLifetime, IClassFixture<WebAp
 
     private readonly List<Guid> _createdIds = new();
 
-    public CreateCustomerControllerTests(WebApplicationFactory<IApiMarker> appFactory)
+    public CreateCustomerControllerTests(CustomerApiFactory apiFactory)
     {
         //  Sync Setup
-        _httpClient = appFactory.CreateClient();
+        _apiFactory = apiFactory;
+        _httpClient = apiFactory.CreateClient();
     }
     
     [Fact]
