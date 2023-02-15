@@ -15,15 +15,8 @@ namespace Customers.Api.Tests.Integration;
 
 public class CustomerApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
-    // private readonly IContainer _dbContainer = new ContainerBuilder()
-    //     .WithImage("postgres:latest")
-    //     .WithEnvironment("POSTGRES_USER", "course")
-    //     .WithEnvironment("POSTGRES_PASSWORD", "changeme")
-    //     .WithEnvironment("POSTGRES_DB", "mydb")
-    //     .WithPortBinding(5555, 5432)
-    //     .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
-    //     .Build();
-    
+    public const string ValidGitHubUser = "johndoe";
+        
     private readonly TestcontainerDatabase _dbContainer = new ContainerBuilder<PostgreSqlTestcontainer>()
         .WithDatabase(new PostgreSqlTestcontainerConfiguration
         {
@@ -34,6 +27,15 @@ public class CustomerApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
         .Build();
 
     private readonly GitHubApiServer _gitHubApiServer = new();
+    
+    // private readonly IContainer _dbContainer = new ContainerBuilder()
+    //     .WithImage("postgres:latest")
+    //     .WithEnvironment("POSTGRES_USER", "course")
+    //     .WithEnvironment("POSTGRES_PASSWORD", "changeme")
+    //     .WithEnvironment("POSTGRES_DB", "mydb")
+    //     .WithPortBinding(5555, 5432)
+    //     .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5432))
+    //     .Build();
     
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -60,7 +62,7 @@ public class CustomerApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifet
     public async Task InitializeAsync()
     {
         _gitHubApiServer.Start();
-        _gitHubApiServer.SetupUser("johndoe");
+        _gitHubApiServer.SetupUser(ValidGitHubUser);
         
         await _dbContainer.StartAsync();
     }
