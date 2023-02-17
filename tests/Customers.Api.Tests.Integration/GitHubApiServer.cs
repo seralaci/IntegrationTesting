@@ -29,6 +29,23 @@ public class GitHubApiServer : IDisposable
                 .WithStatusCode(200));
     }
     
+    public void SetupThrottledUser(string username)
+    {
+        _server
+            .Given(Request
+                .Create()
+                .WithPath($"/users/{username}")
+                .UsingGet())
+            .RespondWith(Response
+                .Create()
+                .WithBody(@"{
+                                ""message"": ""API rate limit exceeded for xxx.xxx.xxx.xxx. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)"",
+                                ""documentation_url"": ""https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting""
+                            }")
+                .WithHeader("content-type", "application/json; charset=utf-8")
+                .WithStatusCode(403));
+    }
+    
     public void Dispose()
     {
         _server.Stop();
