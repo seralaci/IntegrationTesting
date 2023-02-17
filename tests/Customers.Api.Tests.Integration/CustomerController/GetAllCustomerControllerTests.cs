@@ -49,7 +49,7 @@ public class GetAllCustomerControllerTests : IClassFixture<CustomerApiFactory>
     {
         // Arrange
         // Act
-        var response = await _httpClient.GetAsync("customers}");
+        var response = await _httpClient.GetAsync("customers");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
