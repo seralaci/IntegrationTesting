@@ -11,7 +11,6 @@ namespace Customers.Api.Tests.Integration.CustomerController;
 
 public class CreateCustomerControllerTests : IClassFixture<CustomerApiFactory>
 {
-    private readonly CustomerApiFactory _apiFactory;
     private readonly HttpClient _httpClient;
 
     private readonly Faker<CustomerRequest> _customerGenerator = new Faker<CustomerRequest>()
@@ -20,12 +19,9 @@ public class CreateCustomerControllerTests : IClassFixture<CustomerApiFactory>
         .RuleFor(x => x.GitHubUsername, CustomerApiFactory.ValidGitHubUser)
         .RuleFor(x => x.DateOfBirth, faker => faker.Person.DateOfBirth.Date);
 
-    private readonly List<Guid> _createdIds = new();
-
     public CreateCustomerControllerTests(CustomerApiFactory apiFactory)
     {
         //  Sync Setup
-        _apiFactory = apiFactory;
         _httpClient = apiFactory.CreateClient();
     }
     

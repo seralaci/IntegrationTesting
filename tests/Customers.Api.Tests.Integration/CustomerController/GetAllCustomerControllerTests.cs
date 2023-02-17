@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Customers.Api.Tests.Integration.CustomerController;
 
-public class GetCustomerControllerTests: IClassFixture<CustomerApiFactory>
+public class GetAllCustomerControllerTests : IClassFixture<CustomerApiFactory>
 {
     private readonly HttpClient _httpClient;
 
@@ -18,14 +18,14 @@ public class GetCustomerControllerTests: IClassFixture<CustomerApiFactory>
         .RuleFor(x => x.GitHubUsername, CustomerApiFactory.ValidGitHubUser)
         .RuleFor(x => x.DateOfBirth, faker => faker.Person.DateOfBirth.Date);
 
-    public GetCustomerControllerTests(CustomerApiFactory apiFactory)
+    public GetAllCustomerControllerTests(CustomerApiFactory apiFactory)
     {
         //  Sync Setup
         _httpClient = apiFactory.CreateClient();
     }
 
     [Fact]
-    public async Task Get_ReturnsCustomer_WhenCustomerExists()
+    public async Task GetAll_ReturnsAllCustomers_WhenCustomersExist()
     {
         // Arrange
         var customer = _customerGenerator.Generate();
@@ -33,22 +33,27 @@ public class GetCustomerControllerTests: IClassFixture<CustomerApiFactory>
         var createdCustomer = await createdResponse.Content.ReadFromJsonAsync<CustomerResponse>();
 
         // Act
-        var response = await _httpClient.GetAsync($"customers/{createdCustomer!.Id}");
+        var response = await _httpClient.GetAsync("customers");
 
         // Assert
-        var retrievedCustomer = await response.Content.ReadFromJsonAsync<CustomerResponse>();
-        retrievedCustomer.Should().BeEquivalentTo(createdCustomer);
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-    }
-
+        var customersResponse = await response.Content.ReadFromJsonAsync<GetAllCustomersResponse>();
+        customersResponse!.Customers.Single().Should().BeEquivalentTo(createdCustomer);
+        
+        // Cleanup
+        await _httpClient.DeleteAsync($"customers/{createdCustomer!.Id}");
+    }    
+    
     [Fact]
-    public async Task Get_ReturnsNotFound_WhenCustomerDoesNotExist()
+    public async Task GetAll_ReturnsEmptyResult_WhenNoCustomersExist()
     {
         // Arrange
         // Act
-        var response = await _httpClient.GetAsync($"customers/{Guid.NewGuid()}");
+        var response = await _httpClient.GetAsync("customers}");
 
         // Assert
-        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+        var customersResponse = await response.Content.ReadFromJsonAsync<GetAllCustomersResponse>();
+        customersResponse!.Customers.Should().BeEmpty();
     }
 }
