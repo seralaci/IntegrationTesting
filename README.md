@@ -1,5 +1,4 @@
-# IntegrationTesting
-Integration Testing (Playground)
+# API and UI Integration Testing (.NET)
 
 ## Create a self-signed certificate
 `dotnet dev-certs https -ep cert.pfx -p Test1234!`
