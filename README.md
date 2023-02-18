@@ -12,3 +12,13 @@ Integration Testing (Playground)
 4. Assertion
 5. Cleanup
 
+## WebUI Integration Testing
+
+If you are getting issues when you're running your tests with that docker-compose.integration.yml file, try changing the line:
+
+- CustomersWebApp_GitHub__ApiBaseUrl=http://localhost:9850
+
+To: 
+
+- CustomersWebApp_GitHub__ApiBaseUrl=http://host.docker.internal:9850
+

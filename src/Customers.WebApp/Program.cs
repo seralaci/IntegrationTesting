@@ -25,7 +25,7 @@ builder.Services.AddSingleton<IGitHubService, GitHubService>();
 
 builder.Services.AddHttpClient("GitHub", httpClient =>
 {
-    httpClient.BaseAddress = new Uri("https://api.github.com/");
+    httpClient.BaseAddress = new Uri(config.GetValue<string>("GitHub:ApiBaseUrl"));
     httpClient.DefaultRequestHeaders.Add(
         HeaderNames.Accept, "application/vnd.github.v3+json");
     httpClient.DefaultRequestHeaders.Add(
