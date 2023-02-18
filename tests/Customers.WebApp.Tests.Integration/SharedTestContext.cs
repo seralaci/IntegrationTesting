@@ -27,6 +27,7 @@ public class SharedTestContext : IAsyncLifetime
         .RemoveOrphans()
         .WaitForHttp("test-app", AppUrl)
         .Build();
+    
     public async Task InitializeAsync()
     {
         GitHubApiServer.Start();
@@ -37,8 +38,8 @@ public class SharedTestContext : IAsyncLifetime
         _playwright = await Playwright.CreateAsync();
         Browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
-            Headless = false,
-            SlowMo = 1000
+            //Headless = false,
+            SlowMo = 150
         });
     }
 
